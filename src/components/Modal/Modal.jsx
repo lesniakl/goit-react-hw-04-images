@@ -17,7 +17,7 @@ export default function Modal() {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  });
 
   return (
     <div className={css.Overlay} onClick={toggleModal}>
