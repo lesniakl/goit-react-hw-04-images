@@ -1,16 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import css from './Button.module.css';
-import PropTypes from 'prop-types';
+import { useFinder } from 'hooks/useFinder';
 
-export default class Button extends Component {
-  render() {
-    return (
-      <button type="button" className={css.Button} onClick={this.props.onMore}>
-        Load more
-      </button>
-    );
-  }
+export default function Button() {
+  const { currentPage, setPage, getData, getSearch, addImages } = useFinder();
+
+  const handleMore = async e => {
+    const newPage = currentPage + 1;
+    const search = getSearch();
+    const imagesFound = await getData(search, newPage);
+    setPage(newPage);
+    addImages(imagesFound, true);
+  };
+
+  return (
+    <button type="button" className={css.Button} onClick={handleMore}>
+      Load more
+    </button>
+  );
 }
-Button.propTypes = {
-  onMore: PropTypes.func.isRequired,
-};
