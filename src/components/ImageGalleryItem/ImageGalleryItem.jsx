@@ -1,25 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 import css from './ImageGalleryItem.module.css';
 import PropTypes from 'prop-types';
+import { useFinder } from 'hooks/useFinder';
 
-export default class ImageGalleryItem extends Component {
-  render() {
-    return (
-      <li className={css.ImageGalleryItem}>
-        <img
-          src={this.props.data.webformatURL}
-          data-large={this.props.data.largeImageURL}
-          alt={this.props.data.tags}
-          className={css.ImageGalleryItemImage}
-          onClick={this.props.onModal}
-        />
-      </li>
-    );
-  }
+export default function ImageGalleryItem({ data }) {
+  const { toggleModal } = useFinder();
+
+  return (
+    <li className={css.ImageGalleryItem}>
+      <img
+        src={data.webformatURL}
+        data-large={data.largeImageURL}
+        alt={data.tags}
+        className={css.ImageGalleryItemImage}
+        onClick={toggleModal}
+      />
+    </li>
+  );
 }
 
 ImageGalleryItem.propTypes = {
   data: PropTypes.object.isRequired,
-  onModal: PropTypes.func.isRequired,
-  isModalOpen: PropTypes.bool.isRequired,
 };
