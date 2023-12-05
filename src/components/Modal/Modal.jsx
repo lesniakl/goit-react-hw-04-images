@@ -1,33 +1,29 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import css from './Modal.module.css';
-import PropTypes from 'prop-types';
+import { useFinder } from 'hooks/useFinder';
 
-export default class Modal extends Component {
-  handleKeyDown = e => {
+export default function Modal() {
+  const { toggleModal, selected } = useFinder();
+
+  const handleKeyDown = e => {
     if (e.key === 'Escape') {
-      this.props.onModal();
+      toggleModal();
     }
   };
 
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown);
-  }
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown);
-  }
-  render() {
-    return (
-      <div className={css.Overlay} onClick={this.props.onModal}>
-        <div className={css.Modal}>
-          <img src={this.props.url} alt={this.props.alt} />
-        </div>
-      </div>
-    );
-  }
-}
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
 
-Modal.propTypes = {
-  url: PropTypes.string.isRequired,
-  alt: PropTypes.string.isRequired,
-  onModal: PropTypes.func.isRequired,
-};
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  return (
+    <div className={css.Overlay} onClick={toggleModal}>
+      <div className={css.Modal}>
+        <img src={selected.url} alt={selected.alt} />
+      </div>
+    </div>
+  );
+}
