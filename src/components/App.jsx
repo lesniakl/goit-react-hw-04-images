@@ -5,9 +5,7 @@ import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
 import Loader from './Loader/Loader';
 import Modal from './Modal/Modal';
-
-const API_KEY = '39514162-fa9dcb7e2d6f74dc9ac05415a';
-const BASE_URL = 'https://pixabay.com/api/';
+import { getPhotosLink } from 'consts/pixabay';
 
 export default class App extends Component {
   state = {
@@ -23,7 +21,7 @@ export default class App extends Component {
     e.preventDefault();
     const form = e.currentTarget;
     const search = form.elements.search.value;
-    const query = `${BASE_URL}?q=${search}&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`;
+    const query = getPhotosLink(search, 1);
     this.setState({ currentPage: 1, currentSearch: search, isLoading: true });
     try {
       const response = await fetch(query);
@@ -44,7 +42,7 @@ export default class App extends Component {
 
   handleMore = async e => {
     const newPage = this.state.currentPage + 1;
-    const query = `${BASE_URL}?q=${this.state.currentSearch}&page=${newPage}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`;
+    const query = getPhotosLink(this.state.currentSearch, newPage);
     this.setState({ isLoading: true, currentPage: newPage });
     try {
       const response = await fetch(query);
@@ -102,7 +100,9 @@ export default class App extends Component {
           isModalOpen={this.state.modalOpen}
         />
         {this.state.isLoading && <Loader />}
-        {this.state.images.length > 0 && <Button onMore={this.handleMore} />}
+        {this.state.images.length > 0 && !this.state.isLoading && (
+          <Button onMore={this.handleMore} />
+        )}
       </div>
     );
   }
